@@ -34,6 +34,10 @@ function updateUI() {
     document.getElementById('wood').textContent = Math.floor(gameData.resources.wood);
     document.getElementById('stone').textContent = Math.floor(gameData.resources.stone);
     document.getElementById('food').textContent = Math.floor(gameData.resources.food);
+    document.getElementById('goldOre').textContent = Math.floor(gameData.resources.goldOre || 0);
+    document.getElementById('ironOre').textContent = Math.floor(gameData.resources.ironOre || 0);
+    document.getElementById('coal').textContent = Math.floor(gameData.resources.coal || 0);
+    document.getElementById('trees').textContent = Math.floor(gameData.resources.trees || 0);
     
     // Update buildings list
     updateBuildingsList();
@@ -440,7 +444,11 @@ function getResourceName(resource) {
     const names = {
         wood: 'Holz',
         stone: 'Stein',
-        food: 'Nahrung'
+        food: 'Nahrung',
+        goldOre: 'Gold-Erz',
+        ironOre: 'Eisen-Erz',
+        coal: 'Kohle',
+        trees: 'Bäume'
     };
     return names[resource] || resource;
 }
