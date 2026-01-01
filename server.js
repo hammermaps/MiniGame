@@ -12,21 +12,23 @@ app.use(express.static('public'));
 
 // Game configuration
 const BUILDINGS = {
-  townhall: { name: 'Rathaus', baseCost: { wood: 100, stone: 100 }, baseTime: 60, produces: {} },
-  barracks: { name: 'Kaserne', baseCost: { wood: 80, stone: 120 }, baseTime: 45, produces: {} },
-  farm: { name: 'Bauernhof', baseCost: { wood: 60, stone: 40 }, baseTime: 30, produces: { food: 10 } },
-  mine: { name: 'Mine', baseCost: { wood: 100, stone: 50 }, baseTime: 40, produces: { stone: 5 } },
-  lumbermill: { name: 'Sägewerk', baseCost: { wood: 50, stone: 80 }, baseTime: 35, produces: { wood: 8 } },
-  goldmine: { name: 'Goldmine', baseCost: { wood: 120, stone: 100 }, baseTime: 50, produces: { goldOre: 3 } },
-  ironmine: { name: 'Eisenmine', baseCost: { wood: 100, stone: 120 }, baseTime: 50, produces: { ironOre: 4 } },
-  coalburner: { name: 'Köhlerei', baseCost: { wood: 80, stone: 60 }, baseTime: 40, produces: { coal: 5 } },
-  lumberjack: { name: 'Baumfäller', baseCost: { wood: 60, stone: 40 }, baseTime: 30, produces: { trees: 6 } }
+  townhall: { name: 'Rathaus', baseCost: { wood: 100, stone: 100 }, baseTime: 60, produces: {}, consumes: {} },
+  barracks: { name: 'Kaserne', baseCost: { wood: 80, stone: 120 }, baseTime: 45, produces: {}, consumes: {} },
+  farm: { name: 'Bauernhof', baseCost: { wood: 60, stone: 40 }, baseTime: 30, produces: { food: 10 }, consumes: {} },
+  mine: { name: 'Mine', baseCost: { wood: 100, stone: 50 }, baseTime: 40, produces: { stone: 5 }, consumes: {} },
+  lumbermill: { name: 'Sägewerk', baseCost: { wood: 50, stone: 80 }, baseTime: 35, produces: { wood: 8 }, consumes: {} },
+  goldmine: { name: 'Goldmine', baseCost: { wood: 120, stone: 100 }, baseTime: 50, produces: { goldOre: 3 }, consumes: {} },
+  ironmine: { name: 'Eisenmine', baseCost: { wood: 100, stone: 120 }, baseTime: 50, produces: { ironOre: 4 }, consumes: {} },
+  lumberjack: { name: 'Baumfäller', baseCost: { wood: 60, stone: 40 }, baseTime: 30, produces: { trees: 6 }, consumes: {} },
+  coalburner: { name: 'Köhlerei', baseCost: { wood: 80, stone: 60 }, baseTime: 40, produces: { coal: 2 }, consumes: { trees: 3 } },
+  ironsmelter: { name: 'Eisenerzschmelze', baseCost: { wood: 150, stone: 120 }, baseTime: 60, produces: { ironBars: 2 }, consumes: { ironOre: 4, coal: 2 } },
+  goldsmelter: { name: 'Goldschmelze', baseCost: { wood: 150, stone: 120 }, baseTime: 60, produces: { goldCoins: 1 }, consumes: { goldOre: 3, coal: 2 } }
 };
 
 const TROOPS = {
-  warrior: { name: 'Krieger', cost: { food: 20, wood: 10 }, trainTime: 30 },
-  archer: { name: 'Bogenschütze', cost: { food: 15, wood: 25 }, trainTime: 45 },
-  cavalry: { name: 'Kavallerie', cost: { food: 40, wood: 20, stone: 10 }, trainTime: 60 }
+  warrior: { name: 'Krieger', cost: { food: 20, ironBars: 2 }, trainTime: 30 },
+  archer: { name: 'Bogenschütze', cost: { food: 15, wood: 10, ironBars: 1 }, trainTime: 45 },
+  cavalry: { name: 'Kavallerie', cost: { food: 40, ironBars: 3, goldCoins: 1 }, trainTime: 60 }
 };
 
 const HEROES = {
@@ -38,7 +40,7 @@ const HEROES = {
 // Initialize default game state
 function getDefaultGameState() {
   return {
-    resources: { wood: 500, stone: 500, food: 500, goldOre: 100, ironOre: 100, coal: 100, trees: 200 },
+    resources: { wood: 500, stone: 500, food: 500, goldOre: 100, ironOre: 100, coal: 50, trees: 200, goldCoins: 10, ironBars: 20 },
     buildings: [],
     troops: { warrior: 0, archer: 0, cavalry: 0 },
     buildQueue: [],
@@ -139,11 +141,36 @@ function processTimeUpdates(state) {
   // Generate resources from buildings
   state.buildings.forEach(building => {
     const buildingConfig = BUILDINGS[building.type];
-    if (buildingConfig.produces) {
-      Object.keys(buildingConfig.produces).forEach(resource => {
-        const amount = buildingConfig.produces[resource] * building.level * deltaTime * resourceMultiplier;
-        state.resources[resource] = (state.resources[resource] || 0) + amount;
-      });
+    if (buildingConfig.produces || buildingConfig.consumes) {
+      // Check if we have enough resources to consume
+      let canProduce = true;
+      if (buildingConfig.consumes) {
+        Object.keys(buildingConfig.consumes).forEach(resource => {
+          const amountNeeded = buildingConfig.consumes[resource] * building.level * deltaTime;
+          if (!state.resources[resource] || state.resources[resource] < amountNeeded) {
+            canProduce = false;
+          }
+        });
+      }
+      
+      // If we can produce, consume resources and produce output
+      if (canProduce) {
+        // Consume resources (not affected by resource multiplier)
+        if (buildingConfig.consumes) {
+          Object.keys(buildingConfig.consumes).forEach(resource => {
+            const amount = buildingConfig.consumes[resource] * building.level * deltaTime;
+            state.resources[resource] = Math.max(0, (state.resources[resource] || 0) - amount);
+          });
+        }
+        
+        // Produce resources (affected by resource multiplier from hero bonus)
+        if (buildingConfig.produces) {
+          Object.keys(buildingConfig.produces).forEach(resource => {
+            const amount = buildingConfig.produces[resource] * building.level * deltaTime * resourceMultiplier;
+            state.resources[resource] = (state.resources[resource] || 0) + amount;
+          });
+        }
+      }
     }
   });
   
