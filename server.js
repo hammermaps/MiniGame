@@ -155,15 +155,15 @@ function processTimeUpdates(state) {
       
       // If we can produce, consume resources and produce output
       if (canProduce) {
-        // Consume resources
+        // Consume resources (not affected by resource multiplier)
         if (buildingConfig.consumes) {
           Object.keys(buildingConfig.consumes).forEach(resource => {
-            const amount = buildingConfig.consumes[resource] * building.level * deltaTime * resourceMultiplier;
+            const amount = buildingConfig.consumes[resource] * building.level * deltaTime;
             state.resources[resource] = Math.max(0, (state.resources[resource] || 0) - amount);
           });
         }
         
-        // Produce resources
+        // Produce resources (affected by resource multiplier from hero bonus)
         if (buildingConfig.produces) {
           Object.keys(buildingConfig.produces).forEach(resource => {
             const amount = buildingConfig.produces[resource] * building.level * deltaTime * resourceMultiplier;
