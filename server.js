@@ -72,7 +72,13 @@ function saveGameState(state) {
 // Process time-based updates
 function processTimeUpdates(state) {
   const now = Date.now();
-  const deltaTime = (now - state.lastUpdate) / 1000; // seconds
+  let deltaTime = (now - state.lastUpdate) / 1000; // seconds
+  
+  // Validate deltaTime to prevent issues with clock adjustments
+  if (deltaTime < 0 || deltaTime > 3600) {
+    // Reset if time goes backward or too far forward (> 1 hour)
+    deltaTime = 0;
+  }
   
   // Apply hero bonus multipliers
   let buildSpeedMultiplier = 1;
