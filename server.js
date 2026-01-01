@@ -16,7 +16,11 @@ const BUILDINGS = {
   barracks: { name: 'Kaserne', baseCost: { wood: 80, stone: 120 }, baseTime: 45, produces: {} },
   farm: { name: 'Bauernhof', baseCost: { wood: 60, stone: 40 }, baseTime: 30, produces: { food: 10 } },
   mine: { name: 'Mine', baseCost: { wood: 100, stone: 50 }, baseTime: 40, produces: { stone: 5 } },
-  lumbermill: { name: 'Sägewerk', baseCost: { wood: 50, stone: 80 }, baseTime: 35, produces: { wood: 8 } }
+  lumbermill: { name: 'Sägewerk', baseCost: { wood: 50, stone: 80 }, baseTime: 35, produces: { wood: 8 } },
+  goldmine: { name: 'Goldmine', baseCost: { wood: 120, stone: 100 }, baseTime: 50, produces: { goldOre: 3 } },
+  ironmine: { name: 'Eisenmine', baseCost: { wood: 100, stone: 120 }, baseTime: 50, produces: { ironOre: 4 } },
+  coalburner: { name: 'Köhlerei', baseCost: { wood: 80, stone: 60 }, baseTime: 40, produces: { coal: 5 } },
+  lumberjack: { name: 'Baumfäller', baseCost: { wood: 60, stone: 40 }, baseTime: 30, produces: { trees: 6 } }
 };
 
 const TROOPS = {
@@ -34,7 +38,7 @@ const HEROES = {
 // Initialize default game state
 function getDefaultGameState() {
   return {
-    resources: { wood: 500, stone: 500, food: 500 },
+    resources: { wood: 500, stone: 500, food: 500, goldOre: 100, ironOre: 100, coal: 100, trees: 200 },
     buildings: [],
     troops: { warrior: 0, archer: 0, cavalry: 0 },
     buildQueue: [],
