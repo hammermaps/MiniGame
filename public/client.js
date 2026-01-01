@@ -38,6 +38,8 @@ function updateUI() {
     document.getElementById('ironOre').textContent = Math.floor(gameData.resources.ironOre || 0);
     document.getElementById('coal').textContent = Math.floor(gameData.resources.coal || 0);
     document.getElementById('trees').textContent = Math.floor(gameData.resources.trees || 0);
+    document.getElementById('goldCoins').textContent = Math.floor(gameData.resources.goldCoins || 0);
+    document.getElementById('ironBars').textContent = Math.floor(gameData.resources.ironBars || 0);
     
     // Update buildings list
     updateBuildingsList();
@@ -79,14 +81,24 @@ function updateBuildingsList() {
     
     container.innerHTML = gameData.buildings.map(building => {
         const buildingConfig = config.buildings[building.type];
+        let productionInfo = '';
+        
+        if (buildingConfig.produces && Object.keys(buildingConfig.produces).length > 0) {
+            productionInfo += `<br><small style="color: #4CAF50;">⬆️ Produziert: ${Object.entries(buildingConfig.produces)
+                .map(([res, amount]) => `${amount * building.level} ${getResourceName(res)}/s`)
+                .join(', ')}</small>`;
+        }
+        
+        if (buildingConfig.consumes && Object.keys(buildingConfig.consumes).length > 0) {
+            productionInfo += `<br><small style="color: #ff9800;">⬇️ Verbraucht: ${Object.entries(buildingConfig.consumes)
+                .map(([res, amount]) => `${amount * building.level} ${getResourceName(res)}/s`)
+                .join(', ')}</small>`;
+        }
+        
         return `
             <div class="building-item">
                 <strong>${buildingConfig.name}</strong> - Stufe ${building.level}
-                ${buildingConfig.produces && Object.keys(buildingConfig.produces).length > 0 
-                    ? `<br><small>Produziert: ${Object.entries(buildingConfig.produces)
-                        .map(([res, amount]) => `${amount * building.level} ${getResourceName(res)}/s`)
-                        .join(', ')}</small>`
-                    : ''}
+                ${productionInfo}
             </div>
         `;
     }).join('');
@@ -448,7 +460,9 @@ function getResourceName(resource) {
         goldOre: 'Gold-Erz',
         ironOre: 'Eisen-Erz',
         coal: 'Kohle',
-        trees: 'Bäume'
+        trees: 'Bäume',
+        goldCoins: 'Gold-Taler',
+        ironBars: 'Eisenbarren'
     };
     return names[resource] || resource;
 }
