@@ -1,0 +1,16 @@
+{
+  "name": "minigame",
+  "version": "1.0.0",
+  "description": "A click-and-point browser game with city building, troop training, and hero bonuses",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["game", "browser", "city-building"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
