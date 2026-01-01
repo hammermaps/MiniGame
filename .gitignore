@@ -1,0 +1,4 @@
+node_modules/
+gamestate.json
+.DS_Store
+*.log

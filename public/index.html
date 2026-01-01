@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniGame - Stadt Aufbauspiel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏰 MiniGame - Stadt Aufbauspiel</h1>
+            <div class="resources" id="resources">
+                <div class="resource">
+                    <span class="icon">🪵</span>
+                    <span class="label">Holz:</span>
+                    <span class="value" id="wood">0</span>
+                </div>
+                <div class="resource">
+                    <span class="icon">🪨</span>
+                    <span class="label">Stein:</span>
+                    <span class="value" id="stone">0</span>
+                </div>
+                <div class="resource">
+                    <span class="icon">🌾</span>
+                    <span class="label">Nahrung:</span>
+                    <span class="value" id="food">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="panel">
+                <h2>🏗️ Gebäude</h2>
+                <div id="buildings-list"></div>
+                <div class="build-options">
+                    <h3>Gebäude bauen / ausbauen</h3>
+                    <div id="build-buttons"></div>
+                </div>
+                <div id="build-queue"></div>
+            </section>
+
+            <section class="panel">
+                <h2>⚔️ Truppen</h2>
+                <div id="troops-list"></div>
+                <div class="train-options">
+                    <h3>Truppen ausbilden</h3>
+                    <div id="train-buttons"></div>
+                </div>
+                <div id="train-queue"></div>
+            </section>
+
+            <section class="panel">
+                <h2>🦸 Helden</h2>
+                <div id="active-hero"></div>
+                <div class="hero-options">
+                    <h3>Helden aktivieren</h3>
+                    <div id="hero-buttons"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <button id="save-btn" class="btn-primary">💾 Spielstand speichern</button>
+            <button id="reset-btn" class="btn-danger">🔄 Spiel zurücksetzen</button>
+            <div class="info">
+                <p>Auto-Update alle 2 Sekunden | Letzte Aktualisierung: <span id="last-update">-</span></p>
+            </div>
+        </footer>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="client.js"></script>
+</body>
+</html>
