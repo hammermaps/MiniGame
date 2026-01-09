@@ -40,6 +40,9 @@ function updateUI() {
     document.getElementById('trees').textContent = Math.floor(gameData.resources.trees || 0);
     document.getElementById('goldCoins').textContent = Math.floor(gameData.resources.goldCoins || 0);
     document.getElementById('ironBars').textContent = Math.floor(gameData.resources.ironBars || 0);
+    document.getElementById('swords').textContent = Math.floor(gameData.resources.swords || 0);
+    document.getElementById('spears').textContent = Math.floor(gameData.resources.spears || 0);
+    document.getElementById('bows').textContent = Math.floor(gameData.resources.bows || 0);
     
     // Update buildings list
     updateBuildingsList();
@@ -462,7 +465,10 @@ function getResourceName(resource) {
         coal: 'Kohle',
         trees: 'Bäume',
         goldCoins: 'Gold-Taler',
-        ironBars: 'Eisenbarren'
+        ironBars: 'Eisenbarren',
+        swords: 'Schwerter',
+        spears: 'Speere',
+        bows: 'Bögen'
     };
     return names[resource] || resource;
 }

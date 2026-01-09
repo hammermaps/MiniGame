@@ -22,13 +22,15 @@ const BUILDINGS = {
   lumberjack: { name: 'Baumfäller', baseCost: { wood: 60, stone: 40 }, baseTime: 30, produces: { trees: 6 }, consumes: {} },
   coalburner: { name: 'Köhlerei', baseCost: { wood: 80, stone: 60 }, baseTime: 40, produces: { coal: 2 }, consumes: { trees: 3 } },
   ironsmelter: { name: 'Eisenerzschmelze', baseCost: { wood: 150, stone: 120 }, baseTime: 60, produces: { ironBars: 2 }, consumes: { ironOre: 4, coal: 2 } },
-  goldsmelter: { name: 'Goldschmelze', baseCost: { wood: 150, stone: 120 }, baseTime: 60, produces: { goldCoins: 1 }, consumes: { goldOre: 3, coal: 2 } }
+  goldsmelter: { name: 'Goldschmelze', baseCost: { wood: 150, stone: 120 }, baseTime: 60, produces: { goldCoins: 1 }, consumes: { goldOre: 3, coal: 2 } },
+  smithy: { name: 'Schmiede', baseCost: { wood: 120, stone: 140 }, baseTime: 55, produces: { swords: 1, spears: 1 }, consumes: { ironBars: 2, coal: 1 } },
+  bowmaker: { name: 'Bogenmacherei', baseCost: { wood: 100, stone: 80 }, baseTime: 45, produces: { bows: 2 }, consumes: { wood: 3, trees: 2 } }
 };
 
 const TROOPS = {
-  warrior: { name: 'Krieger', cost: { food: 20, ironBars: 2 }, trainTime: 30 },
-  archer: { name: 'Bogenschütze', cost: { food: 15, wood: 10, ironBars: 1 }, trainTime: 45 },
-  cavalry: { name: 'Kavallerie', cost: { food: 40, ironBars: 3, goldCoins: 1 }, trainTime: 60 }
+  warrior: { name: 'Krieger', cost: { food: 20, ironBars: 2, swords: 1 }, trainTime: 30 },
+  archer: { name: 'Bogenschütze', cost: { food: 15, wood: 10, ironBars: 1, bows: 1 }, trainTime: 45 },
+  cavalry: { name: 'Kavallerie', cost: { food: 40, ironBars: 3, goldCoins: 1, spears: 1 }, trainTime: 60 }
 };
 
 const HEROES = {
@@ -40,7 +42,7 @@ const HEROES = {
 // Initialize default game state
 function getDefaultGameState() {
   return {
-    resources: { wood: 500, stone: 500, food: 500, goldOre: 100, ironOre: 100, coal: 50, trees: 200, goldCoins: 10, ironBars: 20 },
+    resources: { wood: 500, stone: 500, food: 500, goldOre: 100, ironOre: 100, coal: 50, trees: 200, goldCoins: 10, ironBars: 20, swords: 5, spears: 5, bows: 5 },
     buildings: [],
     troops: { warrior: 0, archer: 0, cavalry: 0 },
     buildQueue: [],
